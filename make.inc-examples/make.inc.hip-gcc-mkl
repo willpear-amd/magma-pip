@@ -90,7 +90,7 @@ FPIC        = -fPIC
 # comment out to build without openmp support
 # NOTE: For some reason, using `-fopenmp` is not enough to add linker flags to
 #   the compiler sometimes, so we need to add -L here too if there are problems
-FOPENMP     = -fopenmp
+#FOPENMP     = -fopenmp
 #FOPENMP     =
 #FOPENMP     = -fopenmp -L$(ROCM_PATH)/lib -I$(ROCM_PATH)/include
 
@@ -168,3 +168,6 @@ else ifeq ($(BACKEND),hip)
 endif
 
 
+LIBDIR += -L$(MKLROOT)/lib
+LIB += -Wl,--enable-new-dtags -Wl,--rpath,/opt/rocm/lib -Wl,--rpath,$(MKLROOT)/lib -Wl,--rpath,/opt/rocm/magma/lib -ldl
+DEVCCFLAGS += --gpu-max-threads-per-block=256
