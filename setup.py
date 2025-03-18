@@ -188,11 +188,10 @@ class clean(setuptools.Command):
         import glob
         import re
 
-        shutil.rmtree(os.path.join(ROOT_DIR, "magma"))
-        shutil.rmtree(os.path.join(ROOT_DIR, "dist"))
 
-        shutil.rmtree(os.path.join(ROOT_DIR, "magma.egg-info"))
-        shutil.rmtree(os.path.join(ROOT_DIR, "build"))
+        shutil.rmtree(os.path.join(ROOT_DIR, "magma.egg-info"))  if os.path.exists(os.path.join(ROOT_DIR, "magma.egg-info"))
+        shutil.rmtree(os.path.join(ROOT_DIR, "build")) if os.path.exists(os.path.join(ROOT_DIR, "build"))
+        shutil.rmtree(os.path.join(ROOT_DIR, "dist")) if os.path.exists(os.path.join(ROOT_DIR, "dist"))
 
 class install(setuptools.command.install.install):
     def run(self):
