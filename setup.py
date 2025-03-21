@@ -92,9 +92,8 @@ class BuildExtension(build_ext):
 
             mkl_root = '/opt/conda/envs/py_3.10'
             os.environ["MKLROOT"] = '/opt/conda/envs/py_3.10'
-            env_vars = {"LANG": "C.UTF-8"}
+            subprocess.check_output('export PATH="${PATH}:/opt/rocm/bin"', shell=True)
 
-            
             print("Building MAGMA for ROCm...")
 
             make_inc = os.path.join(ROOT_DIR,"make.inc")
@@ -189,9 +188,9 @@ class clean(setuptools.Command):
         import re
 
 
-        shutil.rmtree(os.path.join(ROOT_DIR, "magma.egg-info"))  if os.path.exists(os.path.join(ROOT_DIR, "magma.egg-info"))
-        shutil.rmtree(os.path.join(ROOT_DIR, "build")) if os.path.exists(os.path.join(ROOT_DIR, "build"))
-        shutil.rmtree(os.path.join(ROOT_DIR, "dist")) if os.path.exists(os.path.join(ROOT_DIR, "dist"))
+        shutil.rmtree(os.path.join(ROOT_DIR, "magma.egg-info"))  if os.path.exists(os.path.join(ROOT_DIR, "magma.egg-info")) else 0
+        shutil.rmtree(os.path.join(ROOT_DIR, "build")) if os.path.exists(os.path.join(ROOT_DIR, "build")) else 0
+        shutil.rmtree(os.path.join(ROOT_DIR, "dist")) if os.path.exists(os.path.join(ROOT_DIR, "dist")) else 0
 
 class install(setuptools.command.install.install):
     def run(self):
@@ -200,12 +199,8 @@ class install(setuptools.command.install.install):
 try:
     from wheel.bdist_wheel import bdist_wheel
 except ImportError:
-    # This is useful when wheel is not installed and bdist_wheel is not
-    # specified on the command line. If it _is_ specified, parsing the command
-    # line will fail before wheel_concatenate is needed
     wheel = None
 else:
-    # Need to create the proper LICENSE.txt for the wheel
     class wheel(bdist_wheel):
 
         def write_wheelfile(self, *args, **kwargs):
